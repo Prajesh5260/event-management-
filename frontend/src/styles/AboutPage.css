@@ -1,0 +1,256 @@
+.about-page {
+  background: white;
+}
+
+.about-hero {
+  background: linear-gradient(135deg, #F2A65A 0%, #e69848 100%);
+  padding: 80px 20px;
+  color: white;
+  text-align: center;
+}
+
+.about-story {
+  padding: 80px 20px;
+  background: white;
+}
+
+.story-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.story-text h2 {
+  font-size: 2.5rem;
+  color: #2D3748;
+  margin-bottom: 24px;
+  font-weight: 700;
+}
+
+.story-text p {
+  font-size: 1.05rem;
+  color: #4A5568;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.story-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(135deg, #6F8F72 0%, #5a7259 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 80px 20px;
+  background: #E8E2D8;
+}
+
+.stats-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.stat-card {
+  background: white;
+  padding: 40px 20px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #6F8F72;
+  margin-bottom: 12px;
+}
+
+.stat-label {
+  font-size: 1.1rem;
+  color: #718096;
+  font-weight: 500;
+}
+
+/* Values Section */
+.values-section {
+  padding: 80px 20px;
+  background: white;
+}
+
+.values-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.value-card {
+  text-align: center;
+  padding: 30px 20px;
+  border-radius: 16px;
+  background: #E8E2D8;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.value-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+}
+
+.value-card h3 {
+  font-size: 1.4rem;
+  color: #2D3748;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.value-card p {
+  font-size: 0.95rem;
+  color: #718096;
+  line-height: 1.6;
+}
+
+/* Team Section */
+.team-section {
+  padding: 80px 20px;
+  background: #E8E2D8;
+}
+
+.team-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.team-card {
+  background: white;
+  padding: 40px 20px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.team-avatar {
+  width: 100px;
+  height: 100px;
+  background: #e8f0e9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin: 0 auto 20px;
+  color: #6F8F72;
+}
+
+.team-card h3 {
+  font-size: 1.2rem;
+  color: #2D3748;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.team-card p {
+  font-size: 0.95rem;
+  color: #718096;
+}
+
+/* CTA Section */
+.cta-section-about {
+  padding: 80px 20px;
+  background: linear-gradient(135deg, #6F8F72 0%, #5a7259 100%);
+  text-align: center;
+  color: white;
+}
+
+.cta-section-about h2 {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.cta-section-about p {
+  font-size: 1.2rem;
+  margin-bottom: 32px;
+  opacity: 0.95;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .story-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .stats-grid,
+  .values-grid,
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .story-text h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-grid,
+  .values-grid,
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-hero h1 {
+    font-size: 2rem;
+  }
+
+  .cta-section-about h2 {
+    font-size: 2rem;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+  }
+}
