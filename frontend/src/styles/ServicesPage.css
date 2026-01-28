@@ -3,7 +3,7 @@
 }
 
 .services-hero {
-  background: linear-gradient(135deg, #6F8F72 0%, #5a7259 100%);
+  background: linear-gradient(135deg, #0C1B33 0%, #1a2942 100%);
   padding: 80px 20px;
   color: white;
   text-align: center;
@@ -24,7 +24,7 @@
 
 .services-content {
   padding: 80px 20px;
-  background: #E8E2D8;
+  background: #B2AA8E;
 }
 
 .services-grid-detailed {
@@ -43,6 +43,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow: hidden;
 }
 
 .service-card-detailed:hover {
@@ -50,9 +51,23 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
+.service-image {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.service-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .service-icon-large {
   font-size: 4rem;
-  background: #e8f0e9;
+  background: #E8DFCF;
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -61,19 +76,19 @@
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
-  color: #6F8F72;
+  color: #0C1B33;
 }
 
 .service-title-detailed {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #2D3748;
+  color: #0C1B33;
   margin-bottom: 8px;
 }
 
 .service-description-detailed {
   font-size: 1rem;
-  color: #4A5568;
+  color: #0C1B33;
   line-height: 1.6;
   margin-bottom: 16px;
 }
@@ -84,7 +99,7 @@
 
 .service-features h4 {
   font-size: 1.1rem;
-  color: #2D3748;
+  color: #0C1B33;
   margin-bottom: 12px;
   font-weight: 600;
 }
@@ -97,7 +112,7 @@
 
 .service-features li {
   padding: 8px 0;
-  color: #4A5568;
+  color: #0C1B33;
   font-size: 0.95rem;
   position: relative;
   padding-left: 24px;
@@ -107,7 +122,7 @@
   content: '✓';
   position: absolute;
   left: 0;
-  color: #6F8F72;
+  color: #B2AA8E;
   font-weight: bold;
 }
 
@@ -120,7 +135,7 @@
 .section-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2D3748;
+  color: #0C1B33;
   text-align: center;
   margin-bottom: 60px;
 }
@@ -137,7 +152,7 @@
   text-align: center;
   padding: 30px 20px;
   border-radius: 16px;
-  background: #E8E2D8;
+  background: #B2AA8E;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -149,7 +164,7 @@
 .step-number {
   width: 60px;
   height: 60px;
-  background: #6F8F72;
+  background: #0C1B33;
   color: white;
   border-radius: 50%;
   display: flex;
@@ -158,19 +173,19 @@
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0 auto 20px;
-  box-shadow: 0 6px 15px rgba(111, 143, 114, 0.4);
+  box-shadow: 0 6px 15px rgba(12, 27, 51, 0.4);
 }
 
 .process-step h3 {
   font-size: 1.3rem;
-  color: #2D3748;
+  color: #0C1B33;
   margin-bottom: 12px;
   font-weight: 600;
 }
 
 .process-step p {
   font-size: 0.95rem;
-  color: #718096;
+  color: #0C1B33;
   line-height: 1.6;
 }
 

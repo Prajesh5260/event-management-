@@ -1,52 +1,55 @@
 .navigation {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: #0C1B33;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   position: sticky;
   top: 0;
   z-index: 1000;
+  border-bottom: 2px solid #B2AA8E;
 }
 
 .nav-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 40px;
 }
 
 .nav-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 80px;
+  height: 65px;
 }
 
 .logo {
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #2D3748;
+  color: #B2AA8E;
   cursor: pointer;
   margin: 0;
   transition: color 0.3s ease;
+  letter-spacing: 0.5px;
 }
 
 .logo:hover {
-  color: #6F8F72;
+  color: #D4C8B8;
 }
 
 .mobile-menu-btn {
   display: none;
   background: none;
   border: none;
-  font-size: 1.8rem;
-  color: #2D3748;
+  font-size: 1.5rem;
+  color: #B2AA8E;
   cursor: pointer;
-  padding: 8px;
+  padding: 6px;
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 50px;
+  gap: 40px;
+  height: 65px;
 }
 
 .nav-links {
@@ -54,8 +57,9 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 35px;
+  gap: 30px;
   align-items: center;
+  height: 100%;
 }
 
 .nav-links li {
@@ -65,54 +69,88 @@
 .nav-link {
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: #4A5568;
+  color: #B2AA8E;
   cursor: pointer;
   padding: 8px 0;
   transition: color 0.3s ease;
   position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .nav-link:hover {
-  color: #6F8F72;
+  color: #D4C8B8;
 }
 
 .nav-link.active {
-  color: #2D3748;
+  color: #D4C8B8;
   font-weight: 600;
 }
 
 .nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: 15px;
   left: 0;
   width: 100%;
   height: 2px;
-  background: #6F8F72;
+  background: #B2AA8E;
 }
 
 .btn-primary {
-  background: #F2A65A;
-  color: white;
+  background: #B2AA8E;
+  color: #0C1B33;
   border: none;
-  padding: 12px 28px;
-  border-radius: 50px;
-  font-size: 1rem;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 12px rgba(242, 166, 90, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(178, 170, 142, 0.2);
+  white-space: nowrap;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(242, 166, 90, 0.4);
-  background: #e69848;
+  box-shadow: 0 6px 16px rgba(178, 170, 142, 0.4);
+  background: #D4C8B8;
 }
 
 .btn-primary:active {
+  transform: translateY(0);
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 100%;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #B2AA8E;
+  border: 1.5px solid #B2AA8E;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  background: #B2AA8E;
+  color: #0C1B33;
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
   transform: translateY(0);
 }
 
@@ -128,17 +166,17 @@
 
   .nav-menu {
     position: fixed;
-    top: 80px;
+    top: 60px;
     left: 0;
     right: 0;
-    background: white;
+    background: #0C1B33;
     flex-direction: column;
     padding: 20px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     transform: translateY(-120%);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
-    gap: 20px;
+    gap: 15px;
   }
 
   .nav-menu.active {
@@ -155,7 +193,7 @@
   .nav-links li {
     width: 100%;
     text-align: center;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid #2D3748;
   }
 
   .nav-links li:last-child {
@@ -165,14 +203,21 @@
   .nav-link {
     display: block;
     width: 100%;
-    padding: 15px;
+    padding: 12px;
   }
 
   .nav-link.active::after {
     display: none;
   }
 
-  .shop-btn {
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .btn-secondary,
+  .btn-primary {
     width: 100%;
   }
 }

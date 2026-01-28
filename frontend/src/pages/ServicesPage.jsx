@@ -8,42 +8,48 @@ const ServicesPage = () => {
       title: 'Wedding Planning',
       description: 'Complete wedding coordination from venue selection to day-of management. We handle every detail to make your special day perfect.',
       features: ['Venue Selection', 'Vendor Coordination', 'Day-of Management', 'Budget Planning'],
-      color: '#E8E3F3'
+      color: '#E8E3F3',
+      image: '/images/wedding-planning.jpeg'
     },
     {
       icon: '🎂',
       title: 'Birthday Celebrations',
       description: 'Themed birthday parties for all ages with customized decorations, entertainment, and catering services.',
       features: ['Theme Selection', 'Entertainment', 'Catering', 'Photography'],
-      color: '#E8F5E8'
+      color: '#E8F5E8',
+      image: '/images/birthday-celebration.jpeg'
     },
     {
       icon: '🏢',
       title: 'Corporate Events',
       description: 'Professional event management for conferences, seminars, product launches, and team building activities.',
       features: ['Venue Booking', 'Audio/Visual Setup', 'Catering', 'Registration Management'],
-      color: '#FFE8E8'
+      color: '#FFE8E8',
+      image: '/images/corporate-events.jpeg'
     },
     {
       icon: '👨‍👩‍👧‍👦',
       title: 'Family Reunions',
       description: 'Bring families together with well-organized reunions including venue, activities, and meal planning.',
       features: ['Venue Coordination', 'Activity Planning', 'Accommodation Help', 'Photo Services'],
-      color: '#FFF4E6'
+      color: '#FFF4E6',
+      image: '/images/family-reunion.jpeg'
     },
     {
       icon: '🎓',
       title: 'Graduation Parties',
       description: 'Celebrate academic achievements with memorable graduation parties and ceremonies.',
       features: ['Venue Setup', 'Decorations', 'Catering', 'Entertainment'],
-      color: '#E6F7FF'
+      color: '#E6F7FF',
+      image: '/images/graduation-party.jpeg'
     },
     {
       icon: '🎪',
       title: 'Special Occasions',
       description: 'Custom event planning for anniversaries, engagements, retirement parties, and more.',
       features: ['Custom Planning', 'Decoration', 'Vendor Management', 'Timeline Creation'],
-      color: '#F3E8FF'
+      color: '#F3E8FF',
+      image: '/images/special-occasions.jpeg'
     }
   ];
 
@@ -67,6 +73,9 @@ const ServicesPage = () => {
                 className="service-card-detailed"
                 style={{ backgroundColor: service.color }}
               >
+                <div className="service-image">
+                  <img src={service.image} alt={service.title} className="service-img" />
+                </div>
                 <div className="service-icon-large">{service.icon}</div>
                 <h3 className="service-title-detailed">{service.title}</h3>
                 <p className="service-description-detailed">{service.description}</p>

@@ -7,18 +7,18 @@ const GalleryPage = () => {
   const categories = ['all', 'weddings', 'corporate', 'birthdays', 'concerts'];
 
   const gallery = [
-    { id: 1, category: 'weddings', title: 'Elegant Wedding', emoji: '💒' },
-    { id: 2, category: 'corporate', title: 'Tech Conference', emoji: '💼' },
-    { id: 3, category: 'birthdays', title: 'Birthday Bash', emoji: '🎂' },
-    { id: 4, category: 'concerts', title: 'Music Festival', emoji: '🎵' },
-    { id: 5, category: 'weddings', title: 'Garden Wedding', emoji: '🌸' },
-    { id: 6, category: 'corporate', title: 'Product Launch', emoji: '🚀' },
-    { id: 7, category: 'birthdays', title: 'Kids Party', emoji: '🎈' },
-    { id: 8, category: 'concerts', title: 'Jazz Night', emoji: '🎺' },
-    { id: 9, category: 'weddings', title: 'Beach Wedding', emoji: '🏖️' },
-    { id: 10, category: 'corporate', title: 'Team Building', emoji: '👥' },
-    { id: 11, category: 'birthdays', title: 'Sweet 16', emoji: '🎉' },
-    { id: 12, category: 'concerts', title: 'Rock Concert', emoji: '🎸' }
+    { id: 1, category: 'weddings', title: 'Elegant Wedding', image: '/images/wedding-elegant.jpeg' },
+    { id: 2, category: 'corporate', title: 'Tech Conference', image: '/images/corporate-conference.jpeg' },
+    { id: 3, category: 'birthdays', title: 'Birthday Bash', image: '/images/birthday-bash.jpeg' },
+    { id: 4, category: 'concerts', title: 'Music Festival', image: '/images/music-festival-img.jpeg' },
+    { id: 5, category: 'weddings', title: 'Garden Wedding', image: '/images/wedding-garden.jpeg' },
+    { id: 6, category: 'corporate', title: 'Product Launch', image: '/images/corporate-product-launch.jpeg' },
+    { id: 7, category: 'birthdays', title: 'Kids Party', image: '/images/birthday-kids.jpeg' },
+    { id: 8, category: 'concerts', title: 'Jazz Night', image: '/images/jazz-night.jpeg' },
+    { id: 9, category: 'weddings', title: 'Beach Wedding', image: '/images/wedding-beach.jpeg' },
+    { id: 10, category: 'corporate', title: 'Team Building', image: '/images/corporate-teambuilding.jpeg' },
+    { id: 11, category: 'birthdays', title: 'Sweet 16', image: '/images/birthday-sweet16.jpeg' },
+    { id: 12, category: 'concerts', title: 'Rock Concert', image: '/images/music-festival-img.jpeg' }
   ];
 
   const filteredGallery = selectedCategory === 'all' 
@@ -54,7 +54,7 @@ const GalleryPage = () => {
             {filteredGallery.map(item => (
               <div key={item.id} className="gallery-item">
                 <div className="gallery-image">
-                  <span className="gallery-emoji">{item.emoji}</span>
+                  <img src={item.image} alt={item.title} className="gallery-img" />
                 </div>
                 <div className="gallery-overlay">
                   <h3>{item.title}</h3>

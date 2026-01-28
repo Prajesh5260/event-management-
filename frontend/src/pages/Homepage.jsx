@@ -1,7 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/HomePage.css';
 
+const API_BASE_URL = 'http://localhost:5000/api';
+
 const HomePage = ({ setCurrentPage }) => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/events`);
+      const data = await response.json();
+      
+      if (response.ok && data.events) {
+        // Get only the first 3 events for homepage preview
+        setEvents(data.events.slice(0, 3));
+      } else {
+        setError('Failed to load events');
+      }
+    } catch (err) {
+      console.error('Error fetching events:', err);
+      setError('Error loading events');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const services = [
     {
       icon: '🎉',
@@ -57,7 +86,7 @@ const HomePage = ({ setCurrentPage }) => {
             </div>
 
             <div className="hero-image-placeholder">
-              <div className="image-text">Event Planning Professional</div>
+              <img src="/images/hero-professional.jpg" alt="Event Planning Professional" className="hero-img" />
             </div>
 
             <div className="stats-card">
@@ -113,47 +142,40 @@ const HomePage = ({ setCurrentPage }) => {
       {/* Featured Events Section */}
       <section className="featured-section">
         <h2 className="section-title">Upcoming Events</h2>
-        <div className="events-preview">
-          <div className="event-card">
-            <div className="event-image-placeholder">Music Festival 2026</div>
-            <div className="event-info">
-              <h3>Summer Music Festival</h3>
-              <p>📅 July 15, 2026 • 📍 Central Park</p>
-              <button 
-                className="btn-secondary"
-                onClick={() => setCurrentPage('events')}
-              >
-                View Details
-              </button>
-            </div>
+        {loading ? (
+          <p style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Loading events...</p>
+        ) : error ? (
+          <p style={{ textAlign: 'center', padding: '40px', color: '#e74c3c' }}>{error}</p>
+        ) : events.length > 0 ? (
+          <div className="events-preview">
+            {events.map((event) => (
+              <div key={event.id} className="event-card">
+                <div className="event-image-placeholder">
+                  {event.imageUrl ? (
+                    <img src={event.imageUrl} alt={event.title} className="event-img" />
+                  ) : (
+                    <div className="event-img-placeholder">📷 No Image</div>
+                  )}
+                </div>
+                <div className="event-info">
+                  <h3>{event.title}</h3>
+                  <p className="event-type">Type: {event.eventType}</p>
+                  <p>📅 {new Date(event.eventDate).toLocaleDateString()} • 📍 {event.location}</p>
+                  <p className="event-description">{event.description?.substring(0, 60)}...</p>
+                  <p className="event-budget">Budget: ${Number(event.budget).toFixed(2)}</p>
+                  <button 
+                    className="btn-secondary"
+                    onClick={() => setCurrentPage('events')}
+                  >
+                    View All Events
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="event-card">
-            <div className="event-image-placeholder">Tech Conference</div>
-            <div className="event-info">
-              <h3>Tech Innovation Summit</h3>
-              <p>📅 August 20, 2026 • 📍 Convention Center</p>
-              <button 
-                className="btn-secondary"
-                onClick={() => setCurrentPage('events')}
-              >
-                View Details
-              </button>
-            </div>
-          </div>
-          <div className="event-card">
-            <div className="event-image-placeholder">Food Festival</div>
-            <div className="event-info">
-              <h3>International Food Festival</h3>
-              <p>📅 September 5, 2026 • 📍 Downtown Square</p>
-              <button 
-                className="btn-secondary"
-                onClick={() => setCurrentPage('events')}
-              >
-                View Details
-              </button>
-            </div>
-          </div>
-        </div>
+        ) : (
+          <p style={{ textAlign: 'center', padding: '40px', color: '#666' }}>No events available yet</p>
+        )}
       </section>
     </div>
   );

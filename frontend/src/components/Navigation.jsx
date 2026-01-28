@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Navigation.css';
 
 const Navigation = ({ currentPage, setCurrentPage }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const navItems = [
     { name: 'Home', page: 'home' },
@@ -17,12 +25,19 @@ const Navigation = ({ currentPage, setCurrentPage }) => {
     setMobileMenuOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    handleNavClick('home');
+  };
+
   return (
     <nav className="navigation">
       <div className="nav-container">
         <div className="nav-header">
           <h1 className="logo" onClick={() => handleNavClick('home')}>
-            Polished Events.
+            Polished
           </h1>
           
           <button 
@@ -47,12 +62,45 @@ const Navigation = ({ currentPage, setCurrentPage }) => {
             ))}
           </ul>
           
-          <button 
-            className="btn-primary shop-btn"
-            onClick={() => handleNavClick('events')}
-          >
-            Browse Events
-          </button>
+          <div className="auth-buttons">
+            {user ? (
+              <>
+                <button 
+                  className="btn-secondary"
+                  onClick={() => handleNavClick('booking')}
+                >
+                  Book Now
+                </button>
+                <button 
+                  className="btn-secondary"
+                  onClick={() => handleNavClick('my-bookings')}
+                >
+                  My Bookings
+                </button>
+                <button 
+                  className="btn-primary"
+                  onClick={handleLogout}
+                >
+                  Logout ({user.firstName})
+                </button>
+              </>
+            ) : (
+              <>
+                <button 
+                  className="btn-secondary"
+                  onClick={() => handleNavClick('login')}
+                >
+                  Login
+                </button>
+                <button 
+                  className="btn-primary"
+                  onClick={() => handleNavClick('signup')}
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </nav>

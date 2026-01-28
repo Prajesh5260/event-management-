@@ -17,7 +17,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'music',
       price: '$45',
       attendees: 245,
-      image: '🎵'
+      image: '/images/music-festival.jpg'
     },
     {
       id: 2,
@@ -28,7 +28,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'corporate',
       price: '$120',
       attendees: 180,
-      image: '💻'
+      image: '/images/tech-summit.jpg'
     },
     {
       id: 3,
@@ -39,7 +39,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'food',
       price: '$25',
       attendees: 320,
-      image: '🍕'
+      image: '/images/food-festival.jpg'
     },
     {
       id: 4,
@@ -50,7 +50,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'corporate',
       price: '$35',
       attendees: 95,
-      image: '🚀'
+      image: '/images/startup-networking.jpg'
     },
     {
       id: 5,
@@ -61,7 +61,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'music',
       price: '$55',
       attendees: 150,
-      image: '🎺'
+      image: '/images/jazz-concert.jpg'
     },
     {
       id: 6,
@@ -72,7 +72,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'sports',
       price: '$30',
       attendees: 420,
-      image: '🏃'
+      image: '/images/marathon.jpg'
     },
     {
       id: 7,
@@ -83,7 +83,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'education',
       price: '$85',
       attendees: 60,
-      image: '📊'
+      image: '/images/marketing-workshop.jpg'
     },
     {
       id: 8,
@@ -94,7 +94,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'food',
       price: '$75',
       attendees: 85,
-      image: '🍷'
+      image: '/images/food-festival.jpg'
     },
     {
       id: 9,
@@ -105,7 +105,7 @@ const EventsPage = ({ setCurrentPage }) => {
       category: 'music',
       price: '$65',
       attendees: 550,
-      image: '🎸'
+      image: '/images/music-festival.jpg'
     }
   ];
 
@@ -155,7 +155,9 @@ const EventsPage = ({ setCurrentPage }) => {
           <div className="events-grid">
             {filteredEvents.map(event => (
               <div key={event.id} className="event-card-full">
-                <div className="event-image-full">{event.image}</div>
+                <div className="event-image-full">
+                  <img src={event.image} alt={event.title} className="event-img-full" />
+                </div>
                 <div className="event-details">
                   <span className="event-category">{event.category}</span>
                   <h3 className="event-title">{event.title}</h3>
