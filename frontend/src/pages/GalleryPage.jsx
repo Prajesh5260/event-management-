@@ -7,18 +7,18 @@ const GalleryPage = () => {
   const categories = ['all', 'weddings', 'corporate', 'birthdays', 'concerts'];
 
   const gallery = [
-    { id: 1, category: 'weddings', title: 'Elegant Wedding', image: '/images/wedding-elegant.jpeg' },
-    { id: 2, category: 'corporate', title: 'Tech Conference', image: '/images/corporate-conference.jpeg' },
-    { id: 3, category: 'birthdays', title: 'Birthday Bash', image: '/images/birthday-bash.jpeg' },
-    { id: 4, category: 'concerts', title: 'Music Festival', image: '/images/music-festival-img.jpeg' },
-    { id: 5, category: 'weddings', title: 'Garden Wedding', image: '/images/wedding-garden.jpeg' },
-    { id: 6, category: 'corporate', title: 'Product Launch', image: '/images/corporate-product-launch.jpeg' },
-    { id: 7, category: 'birthdays', title: 'Kids Party', image: '/images/birthday-kids.jpeg' },
-    { id: 8, category: 'concerts', title: 'Jazz Night', image: '/images/jazz-night.jpeg' },
-    { id: 9, category: 'weddings', title: 'Beach Wedding', image: '/images/wedding-beach.jpeg' },
-    { id: 10, category: 'corporate', title: 'Team Building', image: '/images/corporate-teambuilding.jpeg' },
-    { id: 11, category: 'birthdays', title: 'Sweet 16', image: '/images/birthday-sweet16.jpeg' },
-    { id: 12, category: 'concerts', title: 'Rock Concert', image: '/images/music-festival-img.jpeg' }
+    { id: 1, category: 'weddings', title: 'Elegant Wedding', image: '/images/elegant wedding.jfif' },
+    { id: 2, category: 'corporate', title: 'Tech Conference', image: '/images/tech-summit.jpg' },
+    { id: 3, category: 'birthdays', title: 'Birthday Bash', image: '/images/bd party 1.jpg' },
+    { id: 4, category: 'concerts', title: 'Music Festival', image: '/images/music-festival.jpg' },
+    { id: 5, category: 'weddings', title: 'Garden Events', image: '/images/garden events.jpg' },
+    { id: 6, category: 'corporate', title: 'Product Launch', image: '/images/startup-networking.jpg' },
+    { id: 7, category: 'birthdays', title: 'Kids Party', image: '/images/janmadin.jpg' },
+    { id: 8, category: 'concerts', title: 'Jazz Night', image: '/images/jazz-concert.jpg' },
+    { id: 9, category: 'weddings', title: 'Beach Wedding', image: '/images/beach wedding.jpg' },
+    { id: 10, category: 'corporate', title: 'Team Building', image: '/images/hero-professional.jpg' },
+    { id: 11, category: 'birthdays', title: 'Sweet 16', image: '/images/bd party 2.jfif' },
+    { id: 12, category: 'concerts', title: 'Rock Concert', image: '/images/music-festival.jpg' }
   ];
 
   const filteredGallery = selectedCategory === 'all' 
