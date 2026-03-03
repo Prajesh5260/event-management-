@@ -3,7 +3,7 @@
 }
 
 .services-hero {
-  background: linear-gradient(135deg, #0C1B33 0%, #1a2942 100%);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
   padding: 80px 20px;
   color: white;
   text-align: center;
@@ -24,7 +24,7 @@
 
 .services-content {
   padding: 80px 20px;
-  background: #B2AA8E;
+  background: var(--off);
 }
 
 .services-grid-detailed {
@@ -67,28 +67,28 @@
 
 .service-icon-large {
   font-size: 4rem;
-  background: #E8DFCF;
+  background: var(--s2);
   width: 90px;
   height: 90px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(7,30,61,0.08);
   margin-bottom: 8px;
-  color: #0C1B33;
+  color: var(--navy);
 }
 
 .service-title-detailed {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #0C1B33;
+  color: var(--navy);
   margin-bottom: 8px;
 }
 
 .service-description-detailed {
   font-size: 1rem;
-  color: #0C1B33;
+  color: var(--navy);
   line-height: 1.6;
   margin-bottom: 16px;
 }
@@ -112,7 +112,7 @@
 
 .service-features li {
   padding: 8px 0;
-  color: #0C1B33;
+  color: var(--navy);
   font-size: 0.95rem;
   position: relative;
   padding-left: 24px;
@@ -122,7 +122,7 @@
   content: '✓';
   position: absolute;
   left: 0;
-  color: #B2AA8E;
+  color: var(--g2);
   font-weight: bold;
 }
 
@@ -135,7 +135,7 @@
 .section-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #0C1B33;
+  color: var(--navy);
   text-align: center;
   margin-bottom: 60px;
 }
@@ -152,7 +152,7 @@
   text-align: center;
   padding: 30px 20px;
   border-radius: 16px;
-  background: #B2AA8E;
+  background: var(--off);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -164,7 +164,7 @@
 .step-number {
   width: 60px;
   height: 60px;
-  background: #0C1B33;
+  background: var(--navy);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -173,7 +173,7 @@
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0 auto 20px;
-  box-shadow: 0 6px 15px rgba(12, 27, 51, 0.4);
+  box-shadow: 0 6px 15px rgba(7,30,61,0.35);
 }
 
 .process-step h3 {
@@ -195,17 +195,17 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .process-steps {
-    grid-template-columns: repeat(2, 1fr);
+  .process-step h3 {
+    font-size: 1.3rem;
+    color: var(--navy);
+    margin-bottom: 12px;
+    font-weight: 600;
   }
-
-  .page-title {
-    font-size: 2.5rem;
+  .process-step p {
+    font-size: 0.95rem;
+    color: var(--navy);
+    line-height: 1.6;
   }
-}
-
-@media (max-width: 640px) {
-  .services-grid-detailed,
   .process-steps {
     grid-template-columns: 1fr;
   }
