@@ -1,11 +1,26 @@
+/* Load the homepage fonts for consistent typography across pages */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Outfit:wght@400;500;600;700&display=swap');
+
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  /* Central design tokens (aligned with Homepage) */
+  --g1: #52D68A;
+  --g2: #A8EFC8;
+  --s1: #38C5F5;
+  --s2: #A2E4FB;
+  --navy: #071E3D;
+  --navy2: #0D2E5A;
+  --white: #FFFFFF;
+  --off: #F2FCF7;
+  --muted: #64748B;
+  --card-r: 22px;
+  --transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
+
   line-height: 1.6;
   font-weight: 400;
   letter-spacing: 0.3px;
 
   color-scheme: light;
-  color: #0C1B33;
+  color: var(--navy);
   background-color: #F5F3F0;
 
   font-synthesis: none;
@@ -33,6 +48,8 @@ body {
   min-height: 100vh;
   background-color: #F5F3F0;
   overflow-x: hidden;
+  font-family: 'Outfit', sans-serif;
+  color: var(--navy);
 }
 
 h1 {
@@ -71,21 +88,33 @@ p {
   color: rgba(12, 27, 51, 0.8);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #F2A65A;
-  color: white;
+/* Primary CTA button used across the app */
+.pe-btn-primary, button {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  padding: 12px 22px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--g1), var(--s1));
+  color: #fff;
   cursor: pointer;
-  transition: all 0.25s;
+  transition: transform .25s ease, box-shadow .25s ease;
+  font-family: inherit;
 }
-button:hover {
-  background-color: #e69848;
+.pe-btn-primary::after, button::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.12);
+  transform: translateX(-100%) skewX(-15deg);
+  transition: transform 0.4s ease;
 }
+.pe-btn-primary:hover, button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(82,214,138,0.28);
+}
+.pe-btn-primary:hover::after, button:hover::after { transform: translateX(120%) skewX(-15deg); }
 
 button:focus,
 button:focus-visible {
@@ -93,14 +122,11 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  :root { background-color: #ffffff; }
 }
+
+/* Helpful utility used by page components */
+.pe-page { width:100%; }
+
+/* Headings: allow the homepage serif for large titles */
+h1, h2, h3 { font-family: 'Cormorant Garamond', serif; }
