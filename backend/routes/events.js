@@ -1,12 +1,16 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const Event = require('../models/Event');
 const User = require('../models/user');
 const authenticateToken = require('../middleware/auth');
+const upload = require('../middleware/upload');
 
 const router = express.Router();
 
 // Create event
-router.post('/', authenticateToken, async (req, res) => {
+// accept multipart/form-data with optional image file
+router.post('/', authenticateToken, upload.single('image'), async (req, res) => {
   try {
     const {
       title,
@@ -18,7 +22,6 @@ router.post('/', authenticateToken, async (req, res) => {
       endTime,
       guestCount,
       budget,
-      imageUrl,
     } = req.body;
 
     if (!title || !description || !location || !eventDate) {
@@ -26,6 +29,11 @@ router.post('/', authenticateToken, async (req, res) => {
         success: false,
         message: 'Title, description, location, and date are required',
       });
+    }
+
+    let imageUrl = null;
+    if (req.file) {
+      imageUrl = `/uploads/${req.file.filename}`;
     }
 
     const event = await Event.create({
@@ -145,7 +153,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update event
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authenticateToken, upload.single('image'), async (req, res) => {
   try {
     const event = await Event.findByPk(req.params.id);
 
@@ -156,7 +164,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
       });
     }
 
-    if (event.userId !== req.user.id) {
+    if (event.userId !== req.user.id && !req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to update this event',
@@ -173,7 +181,6 @@ router.put('/:id', authenticateToken, async (req, res) => {
       endTime,
       guestCount,
       budget,
-      imageUrl,
       status,
     } = req.body;
 
@@ -186,8 +193,17 @@ router.put('/:id', authenticateToken, async (req, res) => {
     if (endTime) event.endTime = endTime;
     if (guestCount) event.guestCount = guestCount;
     if (budget) event.budget = budget;
-    if (imageUrl) event.imageUrl = imageUrl;
     if (status) event.status = status;
+
+    // replace image if new file uploaded
+    if (req.file) {
+      // optionally delete old file
+      if (event.imageUrl) {
+        const oldPath = path.join(__dirname, '..', event.imageUrl);
+        fs.unlink(oldPath, () => {});
+      }
+      event.imageUrl = `/uploads/${req.file.filename}`;
+    }
 
     await event.save();
 
@@ -217,7 +233,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
       });
     }
 
-    if (event.userId !== req.user.id) {
+    if (event.userId !== req.user.id && !req.user.isAdmin) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to delete this event',
