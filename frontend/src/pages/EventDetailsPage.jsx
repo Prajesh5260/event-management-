@@ -1,33 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/EventDetailsPage.css';
+import { useToast } from '../components/Toast';
+import { API_BASE_URL } from '../utils/api';
+import { getEventImage } from '../utils/imageMap';
 
 const EventDetailsPage = ({ setCurrentPage }) => {
   const [ticketCount, setTicketCount] = useState(1);
+  const [event, setEvent] = useState(null);
+  const toast = useToast();
 
-  const event = {
-    title: 'Summer Music Festival 2026',
-    date: 'July 15, 2026',
-    time: '2:00 PM - 10:00 PM',
-    location: 'Central Park, New York',
-    category: 'Music',
-    price: 45,
-    attendees: 245,
-    organizer: 'Events Plus Inc.',
-    description: 'Join us for an unforgettable summer music festival featuring top artists from around the world. Experience live performances, food trucks, and amazing vibes in the heart of Central Park.',
-    highlights: [
-      'Live performances by 20+ artists',
-      'Food and beverage vendors',
-      'VIP lounge access available',
-      'Photo opportunities',
-      'Merchandise booths'
-    ],
-    schedule: [
-      { time: '2:00 PM', activity: 'Gates Open' },
-      { time: '3:00 PM', activity: 'Opening Act' },
-      { time: '5:00 PM', activity: 'Main Performance 1' },
-      { time: '7:00 PM', activity: 'Main Performance 2' },
-      { time: '9:00 PM', activity: 'Headliner' }
-    ]
+  useEffect(() => {
+    const id = localStorage.getItem('preselectEvent');
+    if (id) loadEvent(id);
+  }, []);
+
+  const loadEvent = async (id) => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/events/${id}`);
+      const data = await res.json();
+      if (res.ok && data.event) {
+        setEvent({
+          ...data.event,
+          highlights: data.event.highlights || [],
+          schedule: data.event.schedule || [],
+        });
+      } else {
+        toast(data.message || 'Event not found', 'error');
+      }
+    } catch (err) {
+      toast('Error loading event', 'error');
+      console.error(err);
+    }
+  };
+
+  const handleBookNow = () => {
+    try {
+      localStorage.setItem('preselectEvent', String(event.id));
+    } catch (err) {
+      console.error('Error setting preselectEvent:', err);
+    }
+    setCurrentPage('booking');
   };
 
   const handleIncrement = () => {
@@ -38,7 +50,11 @@ const EventDetailsPage = ({ setCurrentPage }) => {
     if (ticketCount > 1) setTicketCount(ticketCount - 1);
   };
 
-  const totalPrice = event.price * ticketCount;
+  const totalPrice = event ? event.price * ticketCount : 0;
+
+  if (!event) {
+    return <p>Loading event...</p>;
+  }
 
   return (
     <div className="event-details-page">
@@ -53,7 +69,14 @@ const EventDetailsPage = ({ setCurrentPage }) => {
           
           <div className="hero-content-details">
             <div className="hero-image-detail">
-              <div className="image-placeholder-detail">🎵</div>
+              {(() => {
+                let img = getEventImage(event.eventType);
+                if (event.imageUrl) {
+                  const url = event.imageUrl.startsWith('http') ? event.imageUrl : `${API_BASE_URL}${event.imageUrl}`;
+                  img = encodeURI(url);
+                }
+                return <img src={img} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />;
+              })()}
             </div>
             
             <div className="hero-info">
@@ -63,19 +86,21 @@ const EventDetailsPage = ({ setCurrentPage }) => {
               <div className="event-meta-detail">
                 <div className="meta-item-detail">
                   <span className="meta-icon-detail">📅</span>
-                  <span>{event.date}</span>
+                  <span>{new Date(event.eventDate).toLocaleDateString()}</span>
                 </div>
+                {event.startTime && (
                 <div className="meta-item-detail">
                   <span className="meta-icon-detail">🕒</span>
-                  <span>{event.time}</span>
+                  <span>{event.startTime}{event.endTime ? ' - ' + event.endTime : ''}</span>
                 </div>
+                )}
                 <div className="meta-item-detail">
                   <span className="meta-icon-detail">📍</span>
                   <span>{event.location}</span>
                 </div>
                 <div className="meta-item-detail">
                   <span className="meta-icon-detail">👥</span>
-                  <span>{event.attendees} attending</span>
+                  <span>{event.Bookings ? event.Bookings.length : (event.attendees || '-')} attending</span>
                 </div>
               </div>
             </div>
@@ -92,26 +117,30 @@ const EventDetailsPage = ({ setCurrentPage }) => {
                 <p>{event.description}</p>
               </div>
 
-              <div className="details-section">
-                <h2>Event Highlights</h2>
-                <ul className="highlights-list">
-                  {event.highlights.map((highlight, index) => (
-                    <li key={index}>✓ {highlight}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="details-section">
-                <h2>Event Schedule</h2>
-                <div className="schedule-list">
-                  {event.schedule.map((item, index) => (
-                    <div key={index} className="schedule-item">
-                      <span className="schedule-time">{item.time}</span>
-                      <span className="schedule-activity">{item.activity}</span>
-                    </div>
-                  ))}
+              {event.highlights.length > 0 && (
+                <div className="details-section">
+                  <h2>Event Highlights</h2>
+                  <ul className="highlights-list">
+                    {event.highlights.map((highlight, index) => (
+                      <li key={index}>✓ {highlight}</li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
+              )}
+
+              {event.schedule.length > 0 && (
+                <div className="details-section">
+                  <h2>Event Schedule</h2>
+                  <div className="schedule-list">
+                    {event.schedule.map((item, index) => (
+                      <div key={index} className="schedule-item">
+                        <span className="schedule-time">{item.time}</span>
+                        <span className="schedule-activity">{item.activity}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="details-section">
                 <h2>Location</h2>
@@ -129,7 +158,7 @@ const EventDetailsPage = ({ setCurrentPage }) => {
                 
                 <div className="price-section">
                   <span className="price-label">Price per ticket</span>
-                  <span className="price-amount">${event.price}</span>
+                  <span className="price-amount">NPR{event.price}</span>
                 </div>
 
                 <div className="quantity-selector">
@@ -155,10 +184,10 @@ const EventDetailsPage = ({ setCurrentPage }) => {
 
                 <div className="total-section">
                   <span className="total-label">Total</span>
-                  <span className="total-amount">${totalPrice}</span>
+                  <span className="total-amount">NPR{totalPrice}</span>
                 </div>
 
-                <button className="btn-primary btn-book">
+                <button className="btn-primary btn-book" onClick={handleBookNow}>
                   Book Now
                 </button>
 
