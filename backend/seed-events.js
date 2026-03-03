@@ -26,7 +26,8 @@ const seedEvents = async () => {
         lastName: 'Events',
         email: 'events@polishedevents.com',
         password: 'PolishedEvents123!', // In production, this should be hashed
-        phone: '555-0000'
+        phone: '555-0000',
+        isAdmin: true
       });
       console.log('✓ Admin user created');
     }
