@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/EventPage.css';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import { apiFetch } from '../utils/api';
+import { useToast } from '../components/Toast';
 
 export default function BookingPage({ setCurrentPage }) {
   const [bookingType, setBookingType] = useState('Event');
@@ -13,62 +13,69 @@ export default function BookingPage({ setCurrentPage }) {
   const [preferredDate, setPreferredDate] = useState('');
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const toast = useToast();
 
   useEffect(() => {
     fetchEvents();
     fetchServices();
+
+    // Check for preselected event (from Event Details 'Book Now')
+    try {
+      const pre = localStorage.getItem('preselectEvent');
+      if (pre) {
+        setSelectedEvent(String(pre));
+        localStorage.removeItem('preselectEvent');
+      }
+    } catch (err) {
+      console.error('Error reading preselectEvent:', err);
+    }
   }, []);
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/events`);
-      const data = await response.json();
-      if (response.ok && data.events) {
-        setEvents(data.events);
+      const res = await apiFetch('/events');
+      if (res.ok && res.data?.events) {
+        setEvents(res.data.events);
       }
     } catch (err) {
       console.error('Error fetching events:', err);
     }
-  };
+  }; 
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/services`);
-      const data = await response.json();
-      if (response.ok && data.services) {
-        setServices(data.services);
+      const res = await apiFetch('/services');
+      if (res.ok && res.data?.services) {
+        setServices(res.data.services);
       }
     } catch (err) {
       console.error('Error fetching services:', err);
     }
-  };
+  }; 
 
   const handleBook = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    // clear is handled via toast
 
     const token = localStorage.getItem('token');
     if (!token) {
-      setError('Please login to make a booking');
+      toast('Please login to make a booking', 'error');
       setTimeout(() => setCurrentPage('login'), 1500);
       return;
     }
 
     if (!preferredDate) {
-      setError('Please select a preferred date');
+      toast('Please select a preferred date', 'error');
       return;
     }
 
     if (bookingType === 'Event' && !selectedEvent) {
-      setError('Please select an event');
+      toast('Please select an event', 'error');
       return;
     }
 
     if (bookingType === 'Service' && !selectedService) {
-      setError('Please select a service');
+      toast('Please select a service', 'error');
       return;
     }
 
@@ -88,28 +95,29 @@ export default function BookingPage({ setCurrentPage }) {
         bookingData.serviceId = selectedService;
       }
 
-      const response = await fetch(`${API_BASE_URL}/bookings`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(bookingData),
-      });
+      try {
+        const res = await apiFetch('/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bookingData),
+        });
 
-      const data = await response.json();
+        if (!res.ok) {
+          toast(res.data?.message || 'Booking failed', 'error');
+          return;
+        }
 
-      if (!response.ok) {
-        setError(data.message || 'Booking failed');
+        toast('Booking created successfully! Redirecting to your bookings...', 'success');
+        setTimeout(() => {
+          setCurrentPage('my-bookings');
+        }, 1500);
+      } catch (err) {
+        toast(err.message || 'Booking network error. Please try again.', 'error');
+        console.error('Booking network error:', err);
         return;
       }
-
-      setSuccess('Booking created successfully! Redirecting to your bookings...');
-      setTimeout(() => {
-        setCurrentPage('my-bookings');
-      }, 1500);
     } catch (err) {
-      setError('Error creating booking. Please try again.');
+      toast('Error creating booking. Please try again.', 'error');
       console.error('Booking error:', err);
     } finally {
       setLoading(false);
@@ -118,10 +126,10 @@ export default function BookingPage({ setCurrentPage }) {
 
   const getSelectedItemPrice = () => {
     if (bookingType === 'Event') {
-      const event = events.find((e) => e.id === selectedEvent);
-      return event ? event.budget || 0 : 0;
+      const event = events.find((e) => String(e.id) === String(selectedEvent));
+      return event ? event.budget || event.price || 0 : 0;
     } else {
-      const service = services.find((s) => s.id === selectedService);
+      const service = services.find((s) => String(s.id) === String(selectedService));
       return service ? service.price || 0 : 0;
     }
   };
@@ -143,8 +151,6 @@ export default function BookingPage({ setCurrentPage }) {
           <div className="booking-form-card">
             <h2 className="form-title">Make a Booking</h2>
 
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
 
             <form onSubmit={handleBook} className="booking-form">
               {/* Booking Type Selection */}
@@ -187,8 +193,8 @@ export default function BookingPage({ setCurrentPage }) {
                   >
                     <option value="">-- Choose an event --</option>
                     {events.map((event) => (
-                      <option key={event.id} value={event.id}>
-                        {event.eventName} (${event.budget})
+                      <option key={event.id} value={String(event.id)}>
+                        {event.title} (NPR{event.budget})
                       </option>
                     ))}
                   </select>
@@ -208,8 +214,8 @@ export default function BookingPage({ setCurrentPage }) {
                   >
                     <option value="">-- Choose a service --</option>
                     {services.map((service) => (
-                      <option key={service.id} value={service.id}>
-                        {service.serviceName} - {service.category} (${service.price})
+                      <option key={service.id} value={String(service.id)}>
+                        {service.serviceName} - {service.category} (NPR{service.price})
                       </option>
                     ))}
                   </select>
@@ -261,7 +267,7 @@ export default function BookingPage({ setCurrentPage }) {
               <div className="price-summary">
                 <div className="summary-row">
                   <span>Unit Price:</span>
-                  <span>${getSelectedItemPrice()}</span>
+                  <span>NPR{getSelectedItemPrice()}</span>
                 </div>
                 <div className="summary-row">
                   <span>Quantity:</span>
@@ -269,7 +275,7 @@ export default function BookingPage({ setCurrentPage }) {
                 </div>
                 <div className="summary-row total">
                   <span>Total Price:</span>
-                  <span>${totalPrice}</span>
+                  <span>NPR{totalPrice}</span>
                 </div>
               </div>
 
