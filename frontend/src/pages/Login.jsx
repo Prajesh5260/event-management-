@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import '../styles/Login.css';
+import { apiFetch } from '../utils/api';
+import { useToast } from '../components/Toast';
 
-const API_BASE_URL = 'http://localhost:5000/api';
-
-export default function Login({ setCurrentPage }) {
+export default function Login({ setCurrentPage, setUser }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const toast = useToast();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,36 +17,44 @@ export default function Login({ setCurrentPage }) {
     setSuccess('');
 
     if (!email || !password) {
-      setError('Email and password are required');
+      toast('Email and password are required','error');
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      try {
+        const res = await apiFetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
 
-      const data = await response.json();
+        if (!res.ok) {
+          toast(res.data?.message || 'Login failed','error');
+          return;
+        }
 
-      if (!response.ok) {
-        setError(data.message || 'Login failed');
+        const data = res.data;
+        console.log('Login response:', res);
+        console.log('User object:', data.user);
+        toast(`Login successful! Redirecting... (isAdmin=${data.user?.isAdmin ? 'true' : 'false'})`,'success');
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setUser(data.user);
+
+        // Redirect to admin dashboard if user is admin
+        setTimeout(() => {
+          setCurrentPage(data.user?.isAdmin ? 'admin' : 'home');
+        }, 1500);
+      } catch (err) {
+        toast(err.message || 'Error logging in. Please try again.','error');
+        console.error('Login network error:', err);
         return;
       }
 
-      setSuccess('Login successful! Redirecting to home...');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
 
-      setTimeout(() => {
-        setCurrentPage('home');
-      }, 1500);
     } catch (err) {
       setError('Error logging in. Please try again.');
       console.error('Login error:', err);
