@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/GalleryPage.css';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import { apiFetch, API_BASE_URL } from '../utils/api';
+import { useToast } from '../components/Toast';
 
 export default function MyBookingsPage({ setCurrentPage }) {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [cancelingId, setCancelingId] = useState(null);
+  const toast = useToast();
+  const [confirmCancelId, setConfirmCancelId] = useState(null);
 
   useEffect(() => {
     fetchBookings();
@@ -18,28 +18,22 @@ export default function MyBookingsPage({ setCurrentPage }) {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      setError('Please login to view your bookings');
+      toast('Please login to view your bookings', 'error');
       setTimeout(() => setCurrentPage('login'), 2000);
       return;
     }
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/bookings/user/my-bookings`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await apiFetch('/bookings/user/my-bookings');
 
-      const data = await response.json();
-
-      if (response.ok && data.bookings) {
-        setBookings(data.bookings);
+      if (res.ok && res.data?.bookings) {
+        setBookings(res.data.bookings);
       } else {
-        setError(data.message || 'Failed to fetch bookings');
+        toast(res.data?.message || 'Failed to fetch bookings', 'error');
       }
     } catch (err) {
-      setError('Error fetching bookings. Please try again.');
+      toast(err.message || 'Error fetching bookings. Please try again.', 'error');
       console.error('Fetch error:', err);
     } finally {
       setLoading(false);
@@ -49,9 +43,7 @@ export default function MyBookingsPage({ setCurrentPage }) {
   const handleCancelBooking = async (bookingId) => {
     const token = localStorage.getItem('token');
 
-    if (!window.confirm('Are you sure you want to cancel this booking?')) {
-      return;
-    }
+    // confirmation is handled via inline prompt
 
     try {
       setCancelingId(bookingId);
@@ -65,14 +57,13 @@ export default function MyBookingsPage({ setCurrentPage }) {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Booking cancelled successfully!');
+        toast('Booking cancelled successfully!', 'success');
         fetchBookings();
-        setTimeout(() => setSuccess(''), 3000);
       } else {
-        setError(data.message || 'Failed to cancel booking');
+        toast(data.message || 'Failed to cancel booking', 'error');
       }
     } catch (err) {
-      setError('Error cancelling booking. Please try again.');
+      toast('Error cancelling booking. Please try again.', 'error');
       console.error('Cancel error:', err);
     } finally {
       setCancelingId(null);
@@ -114,8 +105,6 @@ export default function MyBookingsPage({ setCurrentPage }) {
 
       <div className="gallery-container">
         <div className="bookings-wrapper">
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
 
           {loading ? (
             <div className="loading-message">Loading your bookings...</div>
@@ -163,7 +152,7 @@ export default function MyBookingsPage({ setCurrentPage }) {
                     </div>
                     <div className="detail-row">
                       <span className="label">Total Price:</span>
-                      <span className="value price">${booking.totalPrice}</span>
+                      <span className="value price">NPR{booking.totalPrice}</span>
                     </div>
                     {booking.notes && (
                       <div className="detail-row full">
@@ -181,13 +170,34 @@ export default function MyBookingsPage({ setCurrentPage }) {
 
                   {booking.status !== 'Cancelled' && (
                     <div className="booking-actions">
-                      <button
-                        className="cancel-btn"
-                        onClick={() => handleCancelBooking(booking.id)}
-                        disabled={cancelingId === booking.id}
-                      >
-                        {cancelingId === booking.id ? 'Cancelling...' : 'Cancel Booking'}
-                      </button>
+                      {confirmCancelId === booking.id ? (
+                        <>
+                          <button
+                            className="cancel-btn"
+                            onClick={() => {
+                              handleCancelBooking(booking.id);
+                              setConfirmCancelId(null);
+                            }}
+                            disabled={cancelingId === booking.id}
+                          >
+                            {cancelingId === booking.id ? 'Cancelling...' : 'Yes, cancel'}
+                          </button>
+                          <button
+                            className="secondary-btn"
+                            onClick={() => setConfirmCancelId(null)}
+                          >
+                            No
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          className="cancel-btn"
+                          onClick={() => setConfirmCancelId(booking.id)}
+                          disabled={cancelingId === booking.id}
+                        >
+                          Cancel Booking
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
