@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import '../styles/SignUp.css';
+import { apiFetch } from '../utils/api';
+import { useToast } from '../components/Toast';
 
-const API_BASE_URL = 'http://localhost:5000/api';
-
-export default function SignUp({ setCurrentPage }) {
+export default function SignUp({ setCurrentPage, setUser }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,6 +12,7 @@ export default function SignUp({ setCurrentPage }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const toast = useToast();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -19,52 +20,46 @@ export default function SignUp({ setCurrentPage }) {
     setSuccess('');
 
     if (!firstName || !lastName || !email || !password) {
-      setError('All fields are required');
+      toast('All fields are required','error');
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      toast('Password must be at least 6 characters','error');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      toast('Passwords do not match','error');
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const res = await apiFetch('/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-          confirmPassword,
-        }),
+        body: JSON.stringify({ firstName, lastName, email, password, confirmPassword }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || 'Sign up failed');
+      if (!res.ok) {
+        toast(res.data?.message || 'Sign up failed','error');
         return;
       }
 
-      setSuccess('Account created successfully! Redirecting to home...');
+      const data = res.data;
+      toast('Account created successfully! Redirecting to home...','success');
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
 
       setTimeout(() => {
         setCurrentPage('home');
       }, 1500);
     } catch (err) {
-      setError('Error creating account. Please try again.');
-      console.error('Signup error:', err);
+      toast(err.message || 'Error creating account. Please try again.','error');
+      console.error('Signup network error:', err);
     } finally {
       setLoading(false);
     }
