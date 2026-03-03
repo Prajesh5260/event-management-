@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const sequelize = require('./config/database');
 const User = require('./models/user');
 const Event = require('./models/Event');
@@ -25,6 +26,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Associations
 User.hasMany(Event, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Event.belongsTo(User, { foreignKey: 'userId' });
@@ -44,6 +48,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/admin', require('./routes/admin'));
 
 // Health check
 app.get('/api/health', (req, res) => {
