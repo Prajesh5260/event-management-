@@ -1,118 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useToast } from '../components/Toast';
 import '../styles/EventPage.css';
+import { apiFetch, API_BASE_URL } from '../utils/api';
+import { getEventImage } from '../utils/imageMap';
 
 const EventsPage = ({ setCurrentPage }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const categories = ['all', 'music', 'corporate', 'food', 'sports', 'education'];
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const toast = useToast();
+  const hasShownError = useRef(false);
 
-  const events = [
-    {
-      id: 1,
-      title: 'Summer Music Festival 2026',
-      date: 'July 15, 2026',
-      time: '2:00 PM - 10:00 PM',
-      location: 'Central Park, New York',
-      category: 'music',
-      price: '$45',
-      attendees: 245,
-      image: '/images/music-festival.jpg'
-    },
-    {
-      id: 2,
-      title: 'Tech Innovation Summit',
-      date: 'August 20, 2026',
-      time: '9:00 AM - 5:00 PM',
-      location: 'Convention Center',
-      category: 'corporate',
-      price: '$120',
-      attendees: 180,
-      image: '/images/tech-summit.jpg'
-    },
-    {
-      id: 3,
-      title: 'International Food Festival',
-      date: 'September 5, 2026',
-      time: '11:00 AM - 8:00 PM',
-      location: 'Downtown Square',
-      category: 'food',
-      price: '$25',
-      attendees: 320,
-      image: '/images/food-festival.jpg'
-    },
-    {
-      id: 4,
-      title: 'Startup Networking Night',
-      date: 'July 25, 2026',
-      time: '6:00 PM - 9:00 PM',
-      location: 'Innovation Hub',
-      category: 'corporate',
-      price: '$35',
-      attendees: 95,
-      image: '/images/startup-networking.jpg'
-    },
-    {
-      id: 5,
-      title: 'Jazz Evening Concert',
-      date: 'August 10, 2026',
-      time: '7:00 PM - 11:00 PM',
-      location: 'Blue Note Club',
-      category: 'music',
-      price: '$55',
-      attendees: 150,
-      image: '/images/jazz-concert.jpg'
-    },
-    {
-      id: 6,
-      title: 'Marathon Championship',
-      date: 'September 15, 2026',
-      time: '6:00 AM - 2:00 PM',
-      location: 'City Streets',
-      category: 'sports',
-      price: '$30',
-      attendees: 420,
-      image: '/images/marathon.jpg'
-    },
-    {
-      id: 7,
-      title: 'Digital Marketing Workshop',
-      date: 'July 30, 2026',
-      time: '10:00 AM - 4:00 PM',
-      location: 'Business Center',
-      category: 'education',
-      price: '$85',
-      attendees: 60,
-      image: '/images/marketing-workshop.jpg'
-    },
-    {
-      id: 8,
-      title: 'Wine Tasting Experience',
-      date: 'August 5, 2026',
-      time: '5:00 PM - 9:00 PM',
-      location: 'Vineyard Estate',
-      category: 'food',
-      price: '$75',
-      attendees: 85,
-      image: '/images/food-festival.jpg'
-    },
-    {
-      id: 9,
-      title: 'Rock Concert Extravaganza',
-      date: 'September 20, 2026',
-      time: '6:00 PM - 11:00 PM',
-      location: 'Arena Stadium',
-      category: 'music',
-      price: '$65',
-      attendees: 550,
-      image: '/images/music-festival.jpg'
-    }
-  ];
+  const categories = ['all', 'Wedding', 'Birthday', 'Anniversary', 'Corporate', 'Other'];
+
+  // fetch events from API so admin-created ones appear for users
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await apiFetch('/events');
+        if (res.ok && res.data?.events) {
+          setEvents(res.data.events);
+        } else {
+          if (!hasShownError.current) {
+            toast(res.data?.message || 'Failed to load events', 'error');
+            hasShownError.current = true;
+          }
+        }
+      } catch (err) {
+        if (!hasShownError.current) {
+          toast('Network error loading events', 'error');
+          hasShownError.current = true;
+        }
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
   const filteredEvents = events.filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         event.location.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory;
+    const matchesSearch =
+      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === 'all' ||
+      event.eventType === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -152,51 +86,73 @@ const EventsPage = ({ setCurrentPage }) => {
             </div>
           </div>
 
-          <div className="events-grid">
-            {filteredEvents.map(event => (
-              <div key={event.id} className="event-card-full">
-                <div className="event-image-full">
-                  <img src={event.image} alt={event.title} className="event-img-full" />
-                </div>
-                <div className="event-details">
-                  <span className="event-category">{event.category}</span>
-                  <h3 className="event-title">{event.title}</h3>
-                  
-                  <div className="event-meta">
-                    <div className="meta-item">
-                      <span className="meta-icon">📅</span>
-                      <span>{event.date}</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-icon">🕒</span>
-                      <span>{event.time}</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-icon">📍</span>
-                      <span>{event.location}</span>
-                    </div>
-                  </div>
-
-                  <div className="event-footer">
-                    <div className="event-info-bottom">
-                      <span className="event-price">{event.price}</span>
-                      <span className="event-attendees">👥 {event.attendees} attending</span>
-                    </div>
-                    <button 
-                      className="btn-primary"
-                      onClick={() => setCurrentPage('event-details')}
-                    >
-                      View Details
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredEvents.length === 0 && (
+          {loading ? (
+            <p>Loading events...</p>
+          ) : filteredEvents.length === 0 ? (
             <div className="no-results">
               <p>No events found matching your criteria</p>
+            </div>
+          ) : (
+            <div className="events-grid">
+              {filteredEvents.map(event => {
+              const dateObj = new Date(event.eventDate);
+              const dateStr = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+              const timeStr = event.startTime || event.endTime
+                ? `${event.startTime || ''}${event.endTime ? ' - ' + event.endTime : ''}`
+                : '';
+              // use eventType to pick varied defaults
+              let img = getEventImage(event.eventType);
+              if (event.imageUrl) {
+                const url = event.imageUrl.startsWith('http') ? event.imageUrl : `${API_BASE_URL}${event.imageUrl}`;
+                img = encodeURI(url);
+              }
+              const attendees = event.Bookings ? event.Bookings.length : '-';
+
+              return (
+                <div key={event.id} className="event-card-full">
+                  <div className="event-image-full">
+                    <img src={img} alt={event.title} className="event-img-full" />
+                  </div>
+                  <div className="event-details">
+                    <span className="event-category">{event.eventType}</span>
+                    <h3 className="event-title">{event.title}</h3>
+                    
+                    <div className="event-meta">
+                      <div className="meta-item">
+                        <span className="meta-icon">📅</span>
+                        <span>{dateStr}</span>
+                      </div>
+                      {timeStr && (
+                        <div className="meta-item">
+                          <span className="meta-icon">🕒</span>
+                          <span>{timeStr}</span>
+                        </div>
+                      )}
+                      <div className="meta-item">
+                        <span className="meta-icon">📍</span>
+                        <span>{event.location}</span>
+                      </div>
+                    </div>
+
+                    <div className="event-footer">
+                      <div className="event-info-bottom">
+                        {event.budget && <span className="event-price">NPR{event.budget}</span>}
+                        <span className="event-attendees">👥 {attendees}</span>
+                      </div>
+                      <button 
+                        className="btn-primary"
+                        onClick={() => {
+                          localStorage.setItem('preselectEvent', event.id);
+                          setCurrentPage('event-details');
+                        }}
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
             </div>
           )}
         </div>
